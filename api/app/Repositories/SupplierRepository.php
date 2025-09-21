@@ -9,7 +9,9 @@ class SupplierRepository implements SupplierRepositoryInterface
 {
     public function create(array $data): Supplier
     {
-        return Supplier::create($data);
+        $supplier = Supplier::create($data);
+        $this->clearSearchCache();
+        return $supplier;
     }
 
     public function search(?string $query = null)
@@ -20,5 +22,43 @@ class SupplierRepository implements SupplierRepositoryInterface
                 $q->where('name', 'like', "%{$query}%");
             })->latest()->get();
         });
+    }
+
+    public function find($id)
+    {
+        return Supplier::find($id);
+    }
+
+    public function update($id, array $data)
+    {
+        $supplier = Supplier::find($id);
+        if (!$supplier) {
+            return null;
+        }
+
+        $supplier->update($data);
+        $this->clearSearchCache();
+
+        return $supplier;
+    }
+
+    public function delete($id)
+    {
+        $supplier = Supplier::find($id);
+        if (!$supplier) {
+            return false;
+        }
+
+        $supplier->delete();
+        $this->clearSearchCache();
+
+        return true;
+    }
+
+    protected function clearSearchCache()
+    {
+        foreach (Cache::store('redis')->getRedis()->keys('suppliers_search_*') as $key) {
+            Cache::store('redis')->forget(str_replace(Cache::store('redis')->getRedis()->getOption(2), '', $key));
+        }
     }
 }
