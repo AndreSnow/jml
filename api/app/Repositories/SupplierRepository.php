@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Supplier;
+use Illuminate\Support\Facades\Cache;
 
 class SupplierRepository implements SupplierRepositoryInterface
 {
@@ -13,8 +14,11 @@ class SupplierRepository implements SupplierRepositoryInterface
 
     public function search(?string $query = null)
     {
-        return Supplier::when($query, function ($q) use ($query) {
-            $q->where('name', 'like', "%{$query}%");
-        })->latest()->get();
+        $cacheKey = 'suppliers_search_' . md5($query ?? 'all');
+        return Cache::store('redis')->remember($cacheKey, 60, function () use ($query) {
+            return Supplier::when($query, function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%");
+            })->latest()->get();
+        });
     }
 }
