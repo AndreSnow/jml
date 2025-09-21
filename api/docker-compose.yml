@@ -1,0 +1,38 @@
+services:
+  app:
+    build: .
+    container_name: laravel_app
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "9000:9000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DB_HOST=db
+      - DB_DATABASE=api
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+      - REDIS_HOST=redis
+
+  db:
+    image: mysql:8.0
+    container_name: laravel_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: api
+    ports:
+      - "3308:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+
+  redis:
+    image: redis:7
+    container_name: laravel_redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  dbdata:

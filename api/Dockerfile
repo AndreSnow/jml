@@ -1,0 +1,23 @@
+FROM php:8.4-apache
+
+RUN apt update && apt install -y \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    git \
+    curl \
+    && docker-php-ext-install mysqli pdo pdo_mysql
+
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+
+COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/html
+
+COPY . /var/www/html
+
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
+EXPOSE 9000
