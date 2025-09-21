@@ -8,6 +8,8 @@ RUN apt update && apt install -y \
     unzip \
     git \
     curl \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
     && docker-php-ext-install mysqli pdo pdo_mysql
 
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
