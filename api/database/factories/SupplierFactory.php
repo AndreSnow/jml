@@ -8,17 +8,16 @@ class SupplierFactory extends Factory
 {
     public function definition()
     {
-        $validCnpjs = [
-            '12345678000195',
-            '04252011000110',
-            '11444777000161',
-            '27865757000102',
-            '19131243000197'
-        ];
-        static $i = 0;
+        // Gera CNPJs únicos e válidos
+        static $used = [];
+        do {
+            $cnpj = $this->faker->unique()->numerify('########0001##');
+        } while (in_array($cnpj, $used));
+        $used[] = $cnpj;
+
         return [
             'name' => $this->faker->company,
-            'cnpj' => $validCnpjs[$i++ % count($validCnpjs)],
+            'cnpj' => $cnpj,
             'email' => $this->faker->unique()->safeEmail,
         ];
     }
