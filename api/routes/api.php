@@ -3,4 +3,4 @@
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
-Route::apiResource('suppliers', SupplierController::class)->only(['index', 'store']);
+Route::apiResource('suppliers', SupplierController::class);
