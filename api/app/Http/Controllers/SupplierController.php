@@ -20,13 +20,13 @@ class SupplierController extends Controller
     {
         $supplier = $this->service->create($request->validated());
 
-        return (new SupplierResource($supplier))->response()->setStatusCode(201);
+        return response()->json(new SupplierResource($supplier), 201);
     }
 
     public function index(Request $request)
     {
         $suppliers = $this->service->search($request->query('q'));
 
-        return SupplierResource::collection($suppliers);
+        return response()->json(SupplierResource::collection($suppliers));
     }
 }
