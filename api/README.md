@@ -42,7 +42,7 @@ docker compose exec app php artisan test
 - `DELETE /api/suppliers/{id}` – Remover fornecedor
 
 ## Migração de dados
-Veja `PLANO_MIGRACAO.md`.
+Veja [Plano de Migração](../doc/PLANO_MIGRACAO.md).
 
 ## Código legado
 Disponível na pasta `legado/` para referência.
@@ -55,8 +55,30 @@ Disponível na pasta `legado/` para referência.
 - Rector para manter padronização do código com boas práticas de estilo
 
 ## Boas práticas
-- Antes de cada `git push`, o time deve executar o rector para manter os padrões
+- Antes de cada `git push`, o time deve executar o rector e o pint para manter os padrões
 
 ```bash
 php artisan rector:run && php artisan pint
 ```
+
+## Documentação Visual
+
+### Diagrama de Casos de Uso
+
+![Use Case](../doc/img/usecase.drawio.svg)
+
+### Diagramas de Atividades
+
+- **Cadastro de Fornecedor (POST):**
+  ![Atividade Cadastro](../doc/img/activity-create.drawio.svg)
+
+- **Atualização de Fornecedor (PUT/PATCH):**
+  ![Atividade Atualização](../doc/img/activity-update.drawio.svg)
+
+- **Busca/Listagem com Filtro (GET):**
+  ![Atividade Listagem](../doc/img/activity-list.drawio.svg)
+
+- **Remoção de Fornecedor (DELETE):**
+  ![Atividade Remoção](../doc/img/activity-delete.drawio.svg)
+
+---
