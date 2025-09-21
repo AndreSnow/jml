@@ -1,6 +1,6 @@
 <?php
 
-$mysqli = new mysqli("localhost","root","","legacy_db");
+$mysqli = new mysqli("db", "root", "root", "legado");
 
 if ($mysqli->connect_error) { die("erro db"); }
 
