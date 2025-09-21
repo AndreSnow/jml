@@ -4,21 +4,17 @@ namespace App\Services;
 
 use App\Models\Supplier;
 use Illuminate\Support\Facades\DB;
-use App\Repositories\SupplierRepositoryInterface;
 
 class SupplierService
 {
-    protected $repository;
-
-    public function __construct(SupplierRepositoryInterface $repository)
+    public function __construct(protected \App\Repositories\SupplierRepositoryInterface $repository)
     {
-        $this->repository = $repository;
     }
 
     public function create(array $data): Supplier
     {
-        return DB::transaction(function () use ($data) {
-            $data['cnpj'] = preg_replace('/\D+/', '', $data['cnpj']);
+        return DB::transaction(function () use ($data): \App\Models\Supplier {
+            $data['cnpj'] = preg_replace('/\D+/', '', (string) $data['cnpj']);
 
             return $this->repository->create($data);
         });

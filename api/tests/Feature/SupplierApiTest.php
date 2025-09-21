@@ -10,7 +10,7 @@ class SupplierApiTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_can_create_supplier_successfully()
+    public function test_can_create_supplier_successfully(): void
     {
         $payload = [
             'name' => 'Test Company',
@@ -18,8 +18,8 @@ class SupplierApiTest extends TestCase
             'email' => 'test@company.com',
         ];
 
-        $response = $this->postJson('/api/suppliers', $payload);
-        $response->assertStatus(201)
+        $testResponse = $this->postJson('/api/suppliers', $payload);
+        $testResponse->assertStatus(201)
             ->assertJsonFragment([
                 'name' => 'Test Company',
                 'cnpj' => '12345678000195',
@@ -31,31 +31,31 @@ class SupplierApiTest extends TestCase
         ]);
     }
 
-    public function test_validation_fails_for_short_name()
+    public function test_validation_fails_for_short_name(): void
     {
         $payload = [
             'name' => 'AB',
             'cnpj' => '12345678000195',
             'email' => 'test@company.com',
         ];
-        $response = $this->postJson('/api/suppliers', $payload);
-        $response->assertStatus(422)
+        $testResponse = $this->postJson('/api/suppliers', $payload);
+        $testResponse->assertStatus(422)
             ->assertJsonValidationErrors(['name']);
     }
 
-    public function test_validation_fails_for_invalid_cnpj()
+    public function test_validation_fails_for_invalid_cnpj(): void
     {
         $payload = [
             'name' => 'Test Company',
             'cnpj' => '11111111111111',
             'email' => 'test@company.com',
         ];
-        $response = $this->postJson('/api/suppliers', $payload);
-        $response->assertStatus(422)
+        $testResponse = $this->postJson('/api/suppliers', $payload);
+        $testResponse->assertStatus(422)
             ->assertJsonValidationErrors(['cnpj']);
     }
 
-    public function test_validation_fails_for_duplicate_cnpj()
+    public function test_validation_fails_for_duplicate_cnpj(): void
     {
         Supplier::factory()->create(['cnpj' => '12345678000195']);
         $payload = [
@@ -63,17 +63,17 @@ class SupplierApiTest extends TestCase
             'cnpj' => '12345678000195',
             'email' => 'another@company.com',
         ];
-        $response = $this->postJson('/api/suppliers', $payload);
-        $response->assertStatus(422)
+        $testResponse = $this->postJson('/api/suppliers', $payload);
+        $testResponse->assertStatus(422)
             ->assertJsonValidationErrors(['cnpj']);
     }
 
-    public function test_can_filter_suppliers_by_name()
+    public function test_can_filter_suppliers_by_name(): void
     {
         Supplier::factory()->create(['name' => 'Alpha', 'cnpj' => '12345678000195']);
         Supplier::factory()->create(['name' => 'Beta', 'cnpj' => '12345678000196']);
-        $response = $this->getJson('/api/suppliers?q=Alpha');
-        $response->assertStatus(200)
+        $testResponse = $this->getJson('/api/suppliers?q=Alpha');
+        $testResponse->assertStatus(200)
             ->assertJsonFragment(['name' => 'Alpha'])
             ->assertJsonMissing(['name' => 'Beta']);
     }

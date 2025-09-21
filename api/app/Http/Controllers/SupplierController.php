@@ -5,21 +5,17 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreSupplierRequest;
 use App\Http\Requests\UpdateSupplierRequest;
 use App\Http\Resources\SupplierResource;
-use App\Services\SupplierService;
 use Illuminate\Http\Request;
 
 class SupplierController extends Controller
 {
-    protected $service;
-
-    public function __construct(SupplierService $service)
+    public function __construct(protected \App\Services\SupplierService $service)
     {
-        $this->service = $service;
     }
 
-    public function store(StoreSupplierRequest $request)
+    public function store(StoreSupplierRequest $storeSupplierRequest)
     {
-        $supplier = $this->service->create($request->validated());
+        $supplier = $this->service->create($storeSupplierRequest->validated());
 
         return response()->json(new SupplierResource($supplier), 201);
     }
@@ -41,9 +37,9 @@ class SupplierController extends Controller
         return response()->json(new SupplierResource($supplier));
     }
 
-    public function update(UpdateSupplierRequest $request, $id)
+    public function update(UpdateSupplierRequest $updateSupplierRequest, $id)
     {
-        $supplier = $this->service->update($id, $request->validated());
+        $supplier = $this->service->update($id, $updateSupplierRequest->validated());
         if (!$supplier) {
             return response()->json(['message' => 'Supplier not found'], 404);
         }

@@ -12,15 +12,15 @@ class SupplierRepositoryTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_search_returns_suppliers_and_uses_cache()
+    public function test_search_returns_suppliers_and_uses_cache(): void
     {
         Cache::store('redis')->flush();
         Supplier::factory()->create(['name' => 'Alpha']);
-        $repo = new SupplierRepository();
-        $result = $repo->search('Alpha');
+        $supplierRepository = new SupplierRepository();
+        $result = $supplierRepository->search('Alpha');
         $this->assertCount(1, $result);
         // Chamada subsequente deve vir do cache
-        $resultCached = $repo->search('Alpha');
+        $resultCached = $supplierRepository->search('Alpha');
         $this->assertCount(1, $resultCached);
     }
 }

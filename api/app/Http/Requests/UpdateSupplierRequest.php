@@ -7,12 +7,12 @@ use App\Rules\Cnpj;
 
 class UpdateSupplierRequest extends FormRequest
 {
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'name'  => 'sometimes|required|string|min:3',
